@@ -1,0 +1,68 @@
+---
+# Feel free to add content and custom Front Matter to this file.
+# To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
+
+layout: home
+---
+<div class="dark w3-container w3-margin-bottom">
+    <h1 class="w3-center" style="margin-top: 0; margin-bottom: 0"><b>Qkmaxware</b></h1>
+    <h2 class="w3-center" style="margin-top: 0">Game Corner</h2>
+</div>
+<div id="game-list" class="w3-row">
+
+</div>
+
+<script>
+async function GetGameRepos() {
+    const list = document.getElementById("game-list");
+    if (!list)
+        return;
+
+    // "https://api.github.com/users/qkmaxware/repos"
+    const response = await fetch("https://api.github.com/search/repositories?q=user:qkmaxware topic:game is:public");
+    const json = await response.json();
+    const repos = json.items || [];
+
+    for (var repo of repos) {
+        var container = document.createElement("div");
+        container.classList.add("w3-quarter");
+        container.classList.add("w3-padding");
+
+        var item = document.createElement("div");
+        container.appendChild(item);
+        item.dataset.id = repo.id;
+        item.dataset.repo = repo.html_url;
+        item.dataset.url = repo.homepage;
+        item.classList.add("w3-card");
+        item.classList.add("w3-round-large");
+        item.classList.add("w3-padding");
+        
+        var link = document.createElement("a");
+        item.appendChild(link);
+        link.href = repo.homepage;
+        link.classList.add("w3-center");
+        link.classList.add("game");
+
+        var header = document.createElement("h3");
+        link.appendChild(header);
+        header.innerText = repo.name;
+
+        var preview = document.createElement("img");
+        link.appendChild(preview);
+        preview.src = repo.homepage + "/favicons/favicon.ico";
+
+        var desc = document.createElement("p");
+        item.appendChild(desc);
+        desc.innerText = repo.description;
+
+        link = document.createElement("a");
+        item.appendChild(link);
+        link.innerText = "Play Now >";
+        link.href = repo.homepage;
+        link.classList.add("link");
+
+        list.appendChild(container);
+    }
+}
+GetGameRepos();
+</script>
